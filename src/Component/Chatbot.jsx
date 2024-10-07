@@ -1,9 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const Chatbot = () => {
   const [userInput, setUserInput] = useState('');
   const [chatMessages, setChatMessages] = useState([]);
+
+  // Load chat messages from localStorage when the component mounts
+  useEffect(() => {
+    const storedMessages = localStorage.getItem('chatMessages');
+    if (storedMessages) {
+      setChatMessages(JSON.parse(storedMessages));
+    }
+  }, []);
+
+  // Save chat messages to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('chatMessages', JSON.stringify(chatMessages));
+  }, [chatMessages]);
 
   // Handle user input for chatbot
   const handleChatSubmit = async (e) => {
@@ -51,13 +64,13 @@ const Chatbot = () => {
           >
             <span
               style={{
-                backgroundColor: msg.sender === 'user' ? '#d4edda' : '#ffffff', // Light green for user, white for bot
-                color: '#000000', // Black text color
+                backgroundColor: msg.sender === 'user' ? '#d4edda' : '#ffffff',
+                color: '#000000',
                 padding: '8px',
                 borderRadius: '10px',
                 display: 'inline-block',
                 maxWidth: '80%',
-                fontSize: '16px', // Larger text size
+                fontSize: '16px',
               }}
             >
               {msg.text}
